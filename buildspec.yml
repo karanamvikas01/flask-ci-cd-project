@@ -9,10 +9,29 @@ phases:
       - echo Installing dependencies...
       - pip install -r requirements.txt
 
+      # Setup SSH
+      - mkdir -p ~/.ssh
+      - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+
+      # Add EC2 host
+      - ssh-keyscan -H YOUR-EC2-PUBLIC-IP >> ~/.ssh/known_hosts
+
   build:
     commands:
       - echo Build started...
       - python -m py_compile app.py
+
+  post_build:
+    commands:
+      - echo Deployment started...
+
+      - ssh ec2-user@YOUR-EC2-PUBLIC-IP "
+          cd /home/ec2-user/flask-cicd-project &&
+          git pull &&
+          pkill -f app.py || true &&
+          nohup python3 app.py > output.log 2>&1 &
+        "
 
 artifacts:
   files:
