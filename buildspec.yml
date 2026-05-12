@@ -13,6 +13,7 @@ phases:
       - mkdir -p ~/.ssh
       - printf "%s" "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
+      - ssh-keygen -l -f ~/.ssh/id_rsa
 
       # Add EC2 host
       - ssh-keyscan -H 16.112.18.209 >> ~/.ssh/known_hosts
