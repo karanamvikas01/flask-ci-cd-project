@@ -14,8 +14,8 @@ phases:
       - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
 
-      # Add EC2 host
-      - ssh-keyscan -H YOUR-EC2-PUBLIC-IP >> ~/.ssh/known_hosts
+      # Add EC2 host to known hosts
+      - ssh-keyscan -H 16.112.18.209 >> ~/.ssh/known_hosts
 
   build:
     commands:
@@ -25,13 +25,7 @@ phases:
   post_build:
     commands:
       - echo Deployment started...
-
-      - ssh ec2-user@YOUR-EC2-PUBLIC-IP "
-          cd /home/ec2-user/flask-cicd-project &&
-          git pull &&
-          pkill -f app.py || true &&
-          nohup python3 app.py > output.log 2>&1 &
-        "
+      - ssh ec2-user@16.112.18.209 'cd /home/ec2-user/flask-cicd-project && git pull && pkill -f app.py || true && nohup python3 app.py > output.log 2>&1 &'
 
 artifacts:
   files:
