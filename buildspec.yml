@@ -23,10 +23,10 @@ phases:
       - echo Build started...
       - python -m py_compile app.py
 
-  post_build:
-    commands:
-      - echo Deployment started...
-      - ssh -v ec2-user@16.112.18.209 'cd /home/ec2-user/flask-cicd-project && git pull'
+post_build:
+  commands:
+    - echo Deployment started...
+    - ssh -v ec2-user@16.112.18.209 'pwd && ls -la && cd /home/ec2-user/flask-cicd-project && pwd && git status'
 
 artifacts:
   files:
